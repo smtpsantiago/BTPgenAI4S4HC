@@ -1,6 +1,4 @@
 namespace josebecerra_04_a19;
-
-
 entity CustomerMessage  {
   ID: UUID @assert.unique @mandatory;
   //customerMessageID: UUID @assert.unique @mandatory;
