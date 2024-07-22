@@ -1,0 +1,2 @@
+sap.ui.require(["sap/fe/test/JourneyRunner","josebecerra04a19/Customermessage/test/integration/FirstJourney","josebecerra04a19/Customermessage/test/integration/pages/CustomerMessageList","josebecerra04a19/Customermessage/test/integration/pages/CustomerMessageObjectPage"],function(e,s,r,t){"use strict";var e=new e({launchUrl:sap.ui.require.toUrl("josebecerra04a19/Customermessage")+"/index.html"});e.run({pages:{onTheCustomerMessageList:r,onTheCustomerMessageObjectPage:t}},s.run)});
+//# sourceMappingURL=opaTests.qunit.js.map
