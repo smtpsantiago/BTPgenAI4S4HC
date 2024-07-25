@@ -7,7 +7,13 @@ service josebecerra_04_a19Srv
 {
     @odata.draft.enabled
     entity CustomerMessage as
-        projection on my.CustomerMessage;
+        projection on my.CustomerMessage
+        actions
+        {
+            action Action1
+            (
+            );
+        };
 
     entity A_ServiceOrder as
         projection on S4HCP_ServiceOrder_Odata.A_ServiceOrder
@@ -15,15 +21,16 @@ service josebecerra_04_a19Srv
             ServiceOrder,
             ServiceOrderDescription
         };
+
     @odata.draft.enabled
-    entity ProductFAQ as 
+    entity ProductFAQ as
         projection on my.ProductFAQ
-    {
+        {
             ID,
             issue,
             question,
             answer
-    };
+        };
 }
 
 annotate josebecerra_04_a19Srv with @requires :

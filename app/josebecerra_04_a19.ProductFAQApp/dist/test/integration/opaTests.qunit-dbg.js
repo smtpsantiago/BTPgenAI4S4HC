@@ -2,10 +2,10 @@ sap.ui.require(
     [
         'sap/fe/test/JourneyRunner',
         'josebecerra04a19/ProductFAQApp/test/integration/FirstJourney',
-		'josebecerra04a19/ProductFAQApp/test/integration/pages/ProductFAQList',
-		'josebecerra04a19/ProductFAQApp/test/integration/pages/ProductFAQObjectPage'
+		'josebecerra04a19/ProductFAQApp/test/integration/pages/List',
+		'josebecerra04a19/ProductFAQApp/test/integration/pages/ObjectPage'
     ],
-    function(JourneyRunner, opaJourney, ProductFAQList, ProductFAQObjectPage) {
+    function(JourneyRunner, opaJourney, List, ObjectPage) {
         'use strict';
         var JourneyRunner = new JourneyRunner({
             // start index.html in web folder
@@ -16,8 +16,8 @@ sap.ui.require(
         JourneyRunner.run(
             {
                 pages: { 
-					onTheProductFAQList: ProductFAQList,
-					onTheProductFAQObjectPage: ProductFAQObjectPage
+					onTheList: List,
+					onTheObjectPage: ObjectPage
                 }
             },
             opaJourney.run

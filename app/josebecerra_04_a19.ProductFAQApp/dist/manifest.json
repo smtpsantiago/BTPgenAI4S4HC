@@ -13,28 +13,15 @@
     "sourceTemplate": {
       "id": "@sap/generator-fiori:lrop",
       "version": "1.14.2",
-      "toolsId": "db8943b8-38fd-4e2d-b14f-7964673ae5b2"
+      "toolsId": "747bf72d-e62a-4faa-b8cc-d82f3d4aa25e"
     },
     "dataSources": {
       "mainService": {
-        "uri": "service/josebecerra_04_a19/",
+        "uri": "odata/v4/s4-hcp-service-order-odata/",
         "type": "OData",
         "settings": {
           "annotations": [],
           "odataVersion": "4.0"
-        }
-      }
-    },
-    "crossNavigation": {
-      "inbounds": {
-        "josebecerra04a19ProductFAQApp-display": {
-          "semanticObject": "josebecerra04a19ProductFAQApp",
-          "action": "display",
-          "title": "{{flpTitle}}",
-          "signature": {
-            "parameters": {},
-            "additionalParameters": "allowed"
-          }
         }
       }
     }
@@ -99,28 +86,28 @@
       "routes": [
         {
           "pattern": ":?query:",
-          "name": "ProductFAQList",
-          "target": "ProductFAQList"
+          "name": "List",
+          "target": "List"
         },
         {
-          "pattern": "ProductFAQ({key}):?query:",
-          "name": "ProductFAQObjectPage",
-          "target": "ProductFAQObjectPage"
+          "pattern": "({key}):?query:",
+          "name": "ObjectPage",
+          "target": "ObjectPage"
         }
       ],
       "targets": {
-        "ProductFAQList": {
+        "List": {
           "type": "Component",
-          "id": "ProductFAQList",
+          "id": "List",
           "name": "sap.fe.templates.ListReport",
           "options": {
             "settings": {
-              "contextPath": "/ProductFAQ",
+              "contextPath": "/undefined",
               "variantManagement": "Page",
               "navigation": {
-                "ProductFAQ": {
+                "": {
                   "detail": {
-                    "route": "ProductFAQObjectPage"
+                    "route": "ObjectPage"
                   }
                 }
               },
@@ -134,14 +121,14 @@
             }
           }
         },
-        "ProductFAQObjectPage": {
+        "ObjectPage": {
           "type": "Component",
-          "id": "ProductFAQObjectPage",
+          "id": "ObjectPage",
           "name": "sap.fe.templates.ObjectPage",
           "options": {
             "settings": {
               "editableHeaderContent": false,
-              "contextPath": "/ProductFAQ"
+              "contextPath": "/undefined"
             }
           }
         }

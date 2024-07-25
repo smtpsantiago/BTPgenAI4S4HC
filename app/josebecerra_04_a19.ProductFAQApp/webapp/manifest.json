@@ -17,7 +17,7 @@
     },
     "dataSources": {
       "mainService": {
-        "uri": "/odata/v4/s4-hcp-service-order-odata/",
+        "uri": "odata/v4/s4-hcp-service-order-odata/",
         "type": "OData",
         "settings": {
           "annotations": [],
@@ -138,5 +138,9 @@
   "sap.fiori": {
     "registrationIds": [],
     "archeType": "transactional"
+  },
+  "sap.cloud": {
+    "public": true,
+    "service": "lcap.josebecerra_04_a19"
   }
 }
