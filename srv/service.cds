@@ -13,6 +13,9 @@ service josebecerra_04_a19Srv
             action Action1
             (
             );
+            action Action2
+            (
+            );
         };
 
     entity A_ServiceOrder as
