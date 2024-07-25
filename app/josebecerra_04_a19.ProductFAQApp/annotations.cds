@@ -1,0 +1,1 @@
+using S4HCP_ServiceOrder_Odata as service from '../../srv/external/S4HCP_ServiceOrder_Odata';

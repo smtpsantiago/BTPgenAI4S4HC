@@ -15,6 +15,15 @@ service josebecerra_04_a19Srv
             ServiceOrder,
             ServiceOrderDescription
         };
+    @odata.draft.enabled
+    entity ProductFAQ as 
+        projection on my.ProductFAQ
+    {
+            ID,
+            issue,
+            question,
+            answer
+    };
 }
 
 annotate josebecerra_04_a19Srv with @requires :
