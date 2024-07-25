@@ -28,7 +28,7 @@
                     return Controller.extend("PreviewController", {
                         onInit: function () {
 
-                            const data = {"Services":[{"ServiceName":"josebecerra_04_a19Srv","DetailsURL":"./service/josebecerra_04_a19/","Metadata":"./service/josebecerra_04_a19/$metadata","Entities":[{"Name":"CustomerMessage","URL":"./service/josebecerra_04_a19/CustomerMessage","FioriURL":""}],"EntitiesCount":1}]}
+                            const data = {"Services":[{"ServiceName":"josebecerra_04_a19Srv","DetailsURL":"./service/josebecerra_04_a19/","Metadata":"./service/josebecerra_04_a19/$metadata","Entities":[{"Name":"CustomerMessage","URL":"./service/josebecerra_04_a19/CustomerMessage","FioriURL":""},{"Name":"A_ServiceOrder","URL":"./service/josebecerra_04_a19/A_ServiceOrder","FioriURL":""}],"EntitiesCount":2}]}
                             this.getView().setModel(new JSONModel(data));
                         }
                     });
