@@ -14,67 +14,81 @@ module.exports = async function(request) {
 	
 		// Fetch the customer message from the database using the ID
 		const customerMessage = await SELECT.one.from('josebecerra_04_a19.CustomerMessage').where({ ID });
-		if (!customerMessage) throw new Error(`CustomerMessage with ID ${ID} not found`);
 	
-		// Extract necessary information from the customer message
 		const {
-			titleEnglish,
-			fullMessageEnglish,
-			suggestedResponseEnglish,
+			fullMessageCustomerLanguage,
+			messageCategory,
+			messageSentiment,
 			S4HC_ServiceOrder_ServiceOrder: attachedSOId
 		} = customerMessage;
 	
-		// Connect to the S4HCP Service Order OData service
-		const s4HcpServiceOrderOdata = await cds.connect.to('S4HCP_ServiceOrder_Odata');
-		const { A_ServiceOrder, A_ServiceOrderText } = s4HcpServiceOrderOdata.entities;
+		let soContext = '';
+		if (attachedSOId) {
+			// Fetch service order details if there's an attached service order
+			const s4HcpServiceOrderOdata = await cds.connect.to('S4HCP_ServiceOrder_Odata');
+			const { A_ServiceOrder } = s4HcpServiceOrderOdata.entities;
+			const s4hcSO = await s4HcpServiceOrderOdata.run(
+				SELECT.from(A_ServiceOrder, so => {
+					so('ServiceOrder'),
+						so.to_Text(note => {
+							note('*')
+						})
+				})
+					.where({ ServiceOrder: attachedSOId })
+			);
 	
-		// Build the Service Order request body
-		const itemDur = {
-			ServiceOrderItemDescription: 'Service Order duration',
-			Product: 'SRV_01',
-			ServiceDuration: 1,
-			ServiceDurationUnit: 'HR'
-		};
-		const itemQty = {
-			ServiceOrderItemDescription: 'Service Order quantity',
-			Product: 'SRV_02',
-			Quantity: 1,
-			QuantityUnit: 'EA'
-		};
-		const persResp = { PersonResponsible: '9980003640' };
-		const initNote = {
-			Language: 'EN',
-			LongTextID: 'S001',
-			LongText: fullMessageEnglish
-		};
-		const servOrder = {
-			ServiceOrderType: 'SVO1',
-			ServiceOrderDescription: titleEnglish,
-			Language: 'EN',
-			ServiceDocumentPriority: '5',
-			SalesOrganization: '1710',
-			DistributionChannel: '10',
-			Division: '00',
-			SoldToParty: '17100002',
-			to_PersonResponsible: [persResp],
-			to_Item: [itemDur, itemQty],
-			to_Text: [initNote]
-		};
+			// Concatenate long texts from the service order into a single string
+			soContext = s4hcSO[0].to_Text.map(note => note.LongText).join(' ');
+		}
 	
-		// Create the Service Order
-		const serviceOrder = await s4HcpServiceOrderOdata.run(INSERT.into(A_ServiceOrder, servOrder));
-		const soId = serviceOrder.ServiceOrder;
+		let replyPrompt = '';
+		if (messageCategory === 'Technical') {
+			// Embed the customer message to find relevant FAQs
+			const fullMessageEmbedding = await lLMProxy.embed(request, fullMessageCustomerLanguage, process.env.embeddingEndpoint);
+			const fullMessageEmbeddingStr = JSON.stringify(fullMessageEmbedding);
 	
-		LOG.info(`Created Service Order: ${JSON.stringify(serviceOrder)}`);
+			// Select the closest FAQ Item
+			const relevantFAQs = await SELECT`id, issue, question, answer`
+				.from('josebecerra_04_a19.ProductFAQ')
+				.where`cosine_similarity(embedding, to_real_vector(${fullMessageEmbeddingStr})) > 0.7`;
 	
-		// Update the customer message with the new service order ID
-		await UPDATE('josebecerra_04_a19.CustomerMessage')
-			.set({ S4HC_ServiceOrder_ServiceOrder: soId })
-			.where({ ID });
+			// Construct part of the prompt for a Technical issue
+			const faqItem = relevantFAQs[0] || { question: '', answer: '' };
+			replyPrompt = `
+					Generate a helpful reply message including the troubleshooting procedure to the newCustomerMessage based on previousCustomerMessages and relevantFAQItem:
+					relevantFAQItem: ${faqItem.question} ${faqItem.answer}`;
+		} else {
+			// Generate a different prompt type based on the sentiment
+			const messageType = messageSentiment === 'Negative' ? 'a "we are sorry" note' : 'a gratitude note';
+			replyPrompt = `
+					Generate ${messageType} to the newCustomerMessage based on previousCustomerMessages:`;
+		}
 	
-		LOG.info(`Updated customer message with Service Order Id: ${soId}`);
+		// Complete the prompt - common to both cases
+		replyPrompt += `
+				newCustomerMessage: ${fullMessageCustomerLanguage}
+				${soContext ? `previousCustomerMessages: ${soContext}` : ''}
+				Produce the reply in two languages: in the original language of newCustomerMessage and in English. Return the result in the following JSON template:
+				JSON template: {
+					suggestedResponseEnglish: Text,
+					suggestedResponseCustomerLanguage: Text
+				}`;
 	
+		// Generate the reply body using the constructed prompt
+		const resultRaw = await lLMProxy.completion(request, replyPrompt, process.env.completionEndpoint);
+		const resultJSON = JSON.parse(resultRaw);
+		const {
+			suggestedResponseCustomerLanguage,
+			suggestedResponseEnglish
+		} = resultJSON;
 	
+		// Update the customer message in the database with the generated reply
+		await UPDATE('josebecerra_04_a19.CustomerMessage').set({
+			suggestedResponseCustomerLanguage,
+			suggestedResponseEnglish,
+		}).where({ ID });
+	
+		LOG.info(`CustomerMessage with ID ${ID} updated with a reply to the customer.`);
 	} catch (err) {
 		LOG.error(JSON.stringify(err));
 	
@@ -86,5 +100,6 @@ module.exports = async function(request) {
 			status: 500,
 		});
 	}
+	
 	
 }

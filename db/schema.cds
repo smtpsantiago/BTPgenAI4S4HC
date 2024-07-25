@@ -27,9 +27,9 @@ entity CustomerMessage
 }
 entity ProductFAQ
 {
-    key ID : Integer;
+    ID : Integer;
     issue : LargeString;
     question : LargeString;
     answer : LargeString;
-  //  embedding : Vector(1536);
+    embedding : Vector(1536);
 }

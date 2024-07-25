@@ -4,7 +4,7 @@
     "configuration": {
         "phase": "before",
         "events": [
-            "Action1"
+            "Action2"
         ],
         "entity": "josebecerra_04_a19Srv.CustomerMessage"
     },
