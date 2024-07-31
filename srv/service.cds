@@ -1,8 +1,23 @@
+using { S4HCP_ServiceOrder_Odata } from './external/S4HCP_ServiceOrder_Odata.cds';
+
 using { josebecerra_07_a19 as my } from '../db/schema.cds';
 
-@path: '/service/josebecerra_07_a19'
-@requires: 'authenticated-user'
-service josebecerra_07_a19Srv {
-  @odata.draft.enabled
-  entity CustomerMessage as projection on my.CustomerMessage;
+@path : '/service/josebecerra_07_a19'
+service josebecerra_07_a19Srv
+{
+    @odata.draft.enabled
+    entity CustomerMessage as
+        projection on my.CustomerMessage;
+
+    entity A_ServiceOrder as
+        projection on S4HCP_ServiceOrder_Odata.A_ServiceOrder
+        {
+            ServiceOrder,
+            ServiceOrderDescription
+        };
 }
+
+annotate josebecerra_07_a19Srv with @requires :
+[
+    'authenticated-user'
+];
