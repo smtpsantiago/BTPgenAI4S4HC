@@ -1,0 +1,2 @@
+sap.ui.require(["sap/fe/test/JourneyRunner","josebecerra07a19/ProductFAQApp/test/integration/FirstJourney","josebecerra07a19/ProductFAQApp/test/integration/pages/ProductFAQList","josebecerra07a19/ProductFAQApp/test/integration/pages/ProductFAQObjectPage"],function(e,r,t,a){"use strict";var e=new e({launchUrl:sap.ui.require.toUrl("josebecerra07a19/ProductFAQApp")+"/index.html"});e.run({pages:{onTheProductFAQList:t,onTheProductFAQObjectPage:a}},r.run)});
+//# sourceMappingURL=opaTests.qunit.js.map

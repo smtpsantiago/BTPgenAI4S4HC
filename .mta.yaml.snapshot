@@ -43,6 +43,23 @@ modules:
       _artifactName: josebecerra07a19Customermessages.zip
       supported-platforms: []
       build-result: dist-zip
+  - name: josebecerra_07_a19-josebecerra07a19.ProductFAQApp
+    type: html5
+    path: app/josebecerra_07_a19.ProductFAQApp
+    build-parameters:
+      builder: custom
+      commands:
+        - rm -rf dist-zip dist
+        - >-
+          npx -p @ui5/cli@^3.0.0 ui5 build --dest dist
+          --include-task=generateCachebusterInfo
+        - mkdir dist-zip
+        - >-
+          bash -c "cd dist && npx bestzip
+          ../dist-zip/josebecerra07a19ProductFAQApp.zip *"
+      _artifactName: josebecerra07a19ProductFAQApp.zip
+      supported-platforms: []
+      build-result: dist-zip
   - name: josebecerra_07_a19-db-deployer
     type: hdb
     path: gen/db
@@ -151,6 +168,10 @@ modules:
         - name: josebecerra_07_a19-josebecerra07a19.Customermessages
           artifacts:
             - josebecerra07a19Customermessages.zip
+          target-path: resources
+        - name: josebecerra_07_a19-josebecerra07a19.ProductFAQApp
+          artifacts:
+            - josebecerra07a19ProductFAQApp.zip
           target-path: resources
         - name: josebecerra_07_a19-launchpad
           artifacts:

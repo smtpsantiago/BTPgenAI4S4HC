@@ -57,3 +57,12 @@ annotate service.ProductFAQ with @(
     ],
 );
 
+annotate service.ProductFAQ with @(
+    UI.Identification : [
+        {
+            $Type : 'UI.DataFieldForAction',
+            Action : 'josebecerra_07_a19Srv.Action1',
+            Label : 'Action1',
+        },
+    ]
+);
